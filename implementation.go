@@ -1,7 +1,7 @@
 package lab2
 
 import (
-	"fmt"
+	"errors"
 	"math"
 	"regexp"
 	"strconv"
@@ -18,8 +18,8 @@ func PrefixToPostfix(input string) (string, error) {
 		result      string
 		values      = strings.Fields(input)
 		value       string
-		digit, _    = regexp.Compile("[0-9]+")
-		operator, _ = regexp.Compile("[+,-,*,/,^]")
+		digit, _    = regexp.Compile("^[0-9]+$")
+		operator, _ = regexp.Compile("^[+,-,*,/, ^]$")
 	)
 
 	for i := len(values) - 1; i >= 0; i-- {
@@ -29,8 +29,8 @@ func PrefixToPostfix(input string) (string, error) {
 			stack = append(stack, value)
 
 		} else if operator.MatchString(value) {
-			firstArg, _ = strconv.Atoi(stack[1])
-			secondArg, _ = strconv.Atoi(stack[0])
+			firstArg, _ = strconv.Atoi(stack[0])
+			secondArg, _ = strconv.Atoi(stack[1])
 
 			if value == "+" {
 				result = strconv.Itoa(firstArg + secondArg)
@@ -45,9 +45,11 @@ func PrefixToPostfix(input string) (string, error) {
 			}
 			stack = nil
 			stack = append(stack, result)
+		} else {
+			return "", errors.New("invalid input")
 		}
 
 	}
 
-	return stack[0], fmt.Errorf("TODO")
+	return stack[0], nil
 }
