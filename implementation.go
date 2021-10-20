@@ -9,8 +9,8 @@ import (
 )
 
 // TODO: document this function.
-// PrefixToPostfix converts
-func PrefixToPostfix(input string) (string, error) {
+// PrefixEvaluation evaluates math expression written in prefix form
+func PrefixEvaluation(input string) (string, error) {
 	var (
 		stack       []string
 		firstArg    int
@@ -21,6 +21,10 @@ func PrefixToPostfix(input string) (string, error) {
 		digit, _    = regexp.Compile("^[0-9]+$")
 		operator, _ = regexp.Compile("^[+,*,/,^,-]$")
 	)
+
+	if len(values) == 0 {
+		return "", errors.New("invalid input")
+	}
 
 	for i := len(values) - 1; i >= 0; i-- {
 		value = values[i]
