@@ -69,6 +69,30 @@ func (s *TestSuite) TestPrefixEvaluation4(c *C) {
 	c.Assert(got, Equals, fmt.Sprintf("%.0f", want))
 }
 
+func (s *TestSuite) TestInvalidInput(c *C) {
+	_, err := PrefixEvaluation("+ - * ^ 2 2")
+	var want = "invalid input"
+	if err != nil {
+		c.Assert(fmt.Sprint(err), Equals, want)
+	}
+}
+
+func (s *TestSuite) TestInvalidArgument(c *C) {
+	_, err := PrefixEvaluation("* a c")
+	var want = "invalid argument"
+	if err != nil {
+		c.Assert(fmt.Sprint(err), Equals, want)
+	}
+}
+
+func (s *TestSuite) TestEmptyString(c *C) {
+	_, err := PrefixEvaluation("")
+	var want = "empty string"
+	if err != nil {
+		c.Assert(fmt.Sprint(err), Equals, want)
+	}
+}
+
 func ExamplePrefixEvaluation() {
 	res, _ := PrefixEvaluation("* 3 + 2 2")
 	fmt.Println(res)
