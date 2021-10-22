@@ -2,6 +2,7 @@ package lab2
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"regexp"
 	"strconv"
@@ -10,27 +11,54 @@ import (
 
 // TODO: document this function.
 // PrefixEvaluation evaluates math expression written in prefix form
+type fn func(float64, float64) float64
+
+func add(a, b float64) float64 {
+	return b + a
+}
+
+func sub(a, b float64) float64 {
+	return b - a
+}
+
+func mul(a, b float64) float64 {
+	return b * a
+}
+
+func div(a, b float64) float64 {
+	return b / a
+}
+
+func pow(a, b float64) float64 {
+	return math.Pow(b, a)
+}
+
+var fnMap = map[string]fn{
+	"+": add,
+	"-": sub,
+	"*": mul,
+	"/": div,
+	"^": pow,
+}
+
 func PrefixEvaluation(input string) (string, error) {
 	var (
-		stack       []string
-		firstArg    int
-		secondArg   int
-		result      string
+		stack       []float64
 		values      = strings.Fields(input)
-		value       string
-		digit, _    = regexp.Compile("^[0-9]+$")
+		operand, _  = regexp.Compile("^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$")
 		operator, _ = regexp.Compile("^[+,*,/,^,-]$")
 	)
 
-	if len(values) == 0 {
-		return "", errors.New("invalid input")
+	if input == "" || input == " " {
+		return "", errors.New("empty string")
 	}
 
 	for i := len(values) - 1; i >= 0; i-- {
-		value = values[i]
+		var value string = values[i]
 
-		if digit.MatchString(value) {
-			stack = append(stack, value)
+		if operand.MatchString(value) {
+			var number, _ = strconv.ParseFloat(value, 64)
+			stack = append(stack, number)
 
 		} else if operator.MatchString(value) {
 
@@ -38,29 +66,13 @@ func PrefixEvaluation(input string) (string, error) {
 				return "", errors.New("invalid input")
 			}
 
-			firstArg, _ = strconv.Atoi(stack[len(stack)-1])
-			secondArg, _ = strconv.Atoi(stack[len(stack)-2])
-
-			if value == "+" {
-				result = strconv.Itoa(firstArg + secondArg)
-			} else if value == "-" {
-				result = strconv.Itoa(firstArg - secondArg)
-			} else if value == "*" {
-				result = strconv.Itoa(firstArg * secondArg)
-			} else if value == "/" {
-				result = strconv.Itoa(firstArg / secondArg)
-			} else if value == "^" {
-				result = strconv.Itoa(int(math.Pow(float64(firstArg), float64(secondArg))))
-			}
-
-			stack = stack[:len(stack)-2]
-			stack = append(stack, result)
+			a, b := stack[len(stack)-1], stack[len(stack)-2]
+			var fn = fnMap[value]
+			stack = append(stack[:len(stack)-2], fn(a, b))
 
 		} else {
-			return "", errors.New("invalid input")
+			return "", errors.New("invalid argument")
 		}
-
 	}
-
-	return stack[0], nil
+	return fmt.Sprintf("%.0f", stack[0]), nil
 }
