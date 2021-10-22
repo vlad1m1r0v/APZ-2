@@ -52,8 +52,8 @@ func (s *TestSuite) TestPrefixEvaluation1(c *C) {
 }
 
 func (s *TestSuite) TestPrefixEvaluation2(c *C) {
-	got, _ := PrefixEvaluation("/ - ^ 4 + * 1 4 * 4 17 3")
-	var want float64 = (math.Pow(float64(4), float64(-1))*4 + 4*17) / 3
+	got, _ := PrefixEvaluation("^ 2 / 16 - 8196 * 2 ^ 2 * 6 2")
+	var want float64 = 16
 	c.Assert(got, Equals, fmt.Sprintf("%.0f", want))
 }
 
@@ -64,8 +64,8 @@ func (s *TestSuite) TestPrefixEvaluation3(c *C) {
 }
 
 func (s *TestSuite) TestPrefixEvaluation4(c *C) {
-	got, _ := PrefixEvaluation("- * 2 17 + / 6 * 3 4 1")
-	var want float64 = 2*17 - 6/3*4 + 1
+	got, _ := PrefixEvaluation("^ 2 + 8 / 624 * 78 / 96 * 3 + 6 2")
+	var want float64 = 1024
 	c.Assert(got, Equals, fmt.Sprintf("%.0f", want))
 }
 

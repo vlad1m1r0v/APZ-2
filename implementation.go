@@ -68,7 +68,7 @@ func PrefixEvaluation(input string) (string, error) {
 
 			a, b := stack[len(stack)-1], stack[len(stack)-2]
 			var fn = fnMap[value]
-			stack = append(stack[:len(stack)-2], fn(a, b))
+			stack = append(stack[:len(stack)-2], fn(b, a))
 
 		} else {
 			return "", errors.New("invalid argument")
