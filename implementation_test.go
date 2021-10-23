@@ -8,7 +8,6 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-//Getting hooked up with Gocheck
 func Test(t *testing.T) { TestingT(t) }
 
 type TestSuite struct{}

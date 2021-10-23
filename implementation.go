@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// TODO: document this function.
-// PrefixEvaluation evaluates math expression written in prefix form
 type fn func(float64, float64) float64
 
 func add(a, b float64) float64 {
@@ -48,9 +46,6 @@ func PrefixEvaluation(input string) (string, error) {
 		operand, _  = regexp.Compile("^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$")
 		operator, _ = regexp.Compile("^[+,*,/,^,-]$")
 	)
-
-	//unknown function, build should fail
-	bark()
 
 	if input == "" || input == " " {
 		return "", errors.New("empty string")
