@@ -49,6 +49,9 @@ func PrefixEvaluation(input string) (string, error) {
 		operator, _ = regexp.Compile("^[+,*,/,^,-]$")
 	)
 
+	//unknown function, build should fail
+	bark()
+
 	if input == "" || input == " " {
 		return "", errors.New("empty string")
 	}
