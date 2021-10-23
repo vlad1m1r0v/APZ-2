@@ -1,0 +1,17 @@
+name: Prefix Evaluation Action
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Test
+        run: make test
