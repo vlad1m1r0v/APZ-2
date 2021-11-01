@@ -16,40 +16,41 @@ var (
 	outputFile      = flag.String("o", "", "Output file")
 )
 
-func getInput(inputData *string, inputExpression *string) (io.Reader, error) {
+func getInput(inputData *string, inputExpression *string) (io.Reader, *os.File, error) {
 	if *inputData != "" {
 		input, err := os.Open(*inputData)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return nil, err
+			return nil, nil, err
 		}
-		return input, nil
+		return input, input, nil
 	}
-	return strings.NewReader(*inputExpression), nil
+	return strings.NewReader(*inputExpression),nil, nil
 }
 
-func getOutput(outputData *string) (io.Writer, error) {
+func getOutput(outputData *string) (io.Writer, *os.File, error) {
 	if *outputData != "" {
 		output, err := os.Create(*outputData)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return nil, err
+			return nil, nil, err
 		}
-		return output, nil
+		return output, output, nil
 	}
-	return os.Stdout, nil
+	return os.Stdout,nil,  nil
 }
+
 
 func main() {
 	flag.Parse()
 
-	input, err := getInput(inputFile, inputExpression)
+	input, inputFile, err := getInput(inputFile, inputExpression)
 
 	if err != nil {
 		return
 	}
 
-	output, err := getOutput(outputFile)
+	output,outputFile, err := getOutput(outputFile)
 
 	if err != nil {
 		return
@@ -65,5 +66,16 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
+
+	if inputFile != nil {
+		defer inputFile.Close()
+	}
+
+	if outputFile != nil {
+		defer outputFile.Close()
+	}
+	
+
+
 
 }
